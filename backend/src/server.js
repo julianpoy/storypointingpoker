@@ -15,7 +15,7 @@ const server = app.listen(parseInt(process.env.PORT || 3000, 10));
 
 const rooms = {};
 
-const ROOM_CODE_LENGTH = 5;
+const ROOM_CODE_LENGTH = 6;
 const generateRoomCode = () => {
   const alphabet = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
   const alphabetLength = alphabet.length;
@@ -42,10 +42,56 @@ const isValidRoomCode = roomCode => {
 
 const io = require('socket.io')(server);
 io.on('connection', socket => {
-  console.log("connection!");
-  socket.on('subscribe', (roomCode) => {
+  const clientId = socket.client.id;
+  console.log("Client connected!", clientId);
+
+  socket.on('join', (roomCode, name) => {
     console.log("Request to join room: ", roomCode);
-    if (isValidRoomCode(roomCode)) socket.join(roomCode);
+
+    const room = rooms[roomCode];
+
+    if (room) socket.join(roomCode);
+
+    const existingMember = room.members.find(member => member.ioClientId === clientId);
+
+    if (existingMember) return;
+
+    room.members.push({
+      ioClientId: clientId,
+      name,
+      vote: null,
+    });
+
+    io.to(roomCode).emit('room-update');
+  });
+
+  socket.on('vote', (roomCode, voteValue) => {
+    const room = rooms[roomCode];
+    if (!room) return;
+
+    const member = room.members.find(member => member.ioClientId === clientId);
+    if (member) member.vote = voteValue;
+
+    io.to(roomCode).emit('room-update');
+  });
+
+  socket.on('show', (roomCode) => {
+    const room = rooms[roomCode];
+    if (!room) return;
+
+    room.state = 'show';
+
+    io.to(roomCode).emit('room-update');
+  });
+
+  socket.on('reset', (roomCode) => {
+    const room = rooms[roomCode];
+    if (!room) return;
+
+    room.state = 'start';
+    room.members.forEach(member => member.vote = null);
+
+    io.to(roomCode).emit('room-update');
   });
 });
 
@@ -72,26 +118,6 @@ app.post('/rooms', (req, res) => {
 
   rooms[room.code] = room;
 
-  res.status(200).send(room);
-});
-
-app.post('/rooms/:id/join', (req, res) => {
-  const { socketClientId, name } = req.body;
-
-  if (!socketClientId || !name) return res.sendStatus(400);
-
-  const room = rooms[req.params.id];
-
-  if (!room) return res.sendStatus(404);
-
-  room.members.push({
-    socketClientId,
-    name,
-    lastPing: Date.now(),
-  });
-
-  io.to(roomCode).emit('room-update');
-  
   res.status(200).send(room);
 });
 
