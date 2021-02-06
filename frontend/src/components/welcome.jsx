@@ -23,7 +23,7 @@ export const Welcome = ({ setRoom }) => {
 
   return (
     <div>
-      <button onClick={setShowCreating(true)}>Create a New Session</button>
+      <button onClick={() => setShowCreating(true)}>Create a New Session</button>
       or
       <input type="text" placeholder="Session Code" onChange={onRoomCodeInput}></input>
       <button onClick={joinRoom}>Join a Session</button>
