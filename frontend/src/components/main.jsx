@@ -1,8 +1,8 @@
 import { io } from 'socket.io-client';
 import { useState } from 'preact/hooks';
 
-import { Welcome } from './welcome';
-import { Game } from './game';
+import { Welcome } from './welcome.jsx';
+import { Game } from './game.jsx';
 
 const socket = io();
 

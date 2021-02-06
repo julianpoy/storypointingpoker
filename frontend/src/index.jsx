@@ -1,11 +1,11 @@
 import { render } from 'preact';
-import { Card } from './components/card';
+import { Main } from './components/main.jsx';
 
 const App = () => (
   <div>
     Welcome
 
-    <Card number={2} />
+    <Main />
   </div>
 );
 

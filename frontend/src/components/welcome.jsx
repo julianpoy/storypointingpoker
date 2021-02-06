@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'preact/hooks';
 
-import { CreateRoom } from './createRoom';
+import { CreateRoom } from './createRoom.jsx';
 
 export const Welcome = ({ setRoom }) => {
   const [roomCode, setRoomCode] = useState('');
