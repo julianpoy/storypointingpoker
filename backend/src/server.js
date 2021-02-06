@@ -11,17 +11,9 @@ app.use(express.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.get('/', (req, res) => res.render('frontend'));
+const server = app.listen(parseInt(process.env.PORT || 3000, 10));
 
 const rooms = {};
-
-app.get('/rooms/:id', (req, res) => {
-  const room = rooms[req.params.id];
-
-  if (!room) return res.sendStatus(404);
-
-  res.status(200).send(room);
-});
 
 const ROOM_CODE_LENGTH = 5;
 const generateRoomCode = () => {
@@ -40,11 +32,42 @@ const generateRoomCode = () => {
   return generateRoomCode();
 }
 
+const isValidRoomCode = roomCode => {
+  const containsIllegalChar = (/[^A-Z0-9]/).test(roomCode);
+  
+  return !containsIllegalChar && roomCode.length === ROOM_CODE_LENGTH;
+}
+
+// TODO: Move Socket.Io to a separate file
+
+const io = require('socket.io')(server);
+io.on('connection', socket => {
+  console.log("connection!");
+  socket.on('subscribe', (roomCode) => {
+    console.log("Request to join room: ", roomCode);
+    if (isValidRoomCode(roomCode)) socket.join(roomCode);
+  });
+});
+
+// TODO: Move these routes to a separate file
+
+app.get('/', (req, res) => res.render('frontend'));
+
+
+app.get('/rooms/:id', (req, res) => {
+  const room = rooms[req.params.id];
+
+  if (!room) return res.sendStatus(404);
+
+  res.status(200).send(room);
+});
+
 app.post('/rooms', (req, res) => {
   const room = {
     code: generateRoomCode(),
     members: [],
     state: 'start',
+    pointingScale: req.pointingScale,
   };
 
   rooms[room.code] = room;
@@ -66,15 +89,10 @@ app.post('/rooms/:id/join', (req, res) => {
     name,
     lastPing: Date.now(),
   });
+
+  io.to(roomCode).emit('room-update');
   
   res.status(200).send(room);
-});
-
-const server = app.listen(parseInt(process.env.PORT || 3000, 10));
-
-const io = require('socket.io')(server);
-io.on('connection', () => {
-  console.log("connection!");
 });
 
 process.on('SIGTERM', () => {
