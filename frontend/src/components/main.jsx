@@ -12,6 +12,6 @@ export const Main = () => {
   if (!room) return <Welcome setRoom={setRoom} />;
 
   return (
-    <Game socket={socket} />
+    <Game room={room} socket={socket} />
   );
 };
