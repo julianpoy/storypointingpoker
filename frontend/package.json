@@ -4,7 +4,12 @@
   "description": "Simple Planning Poker project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c",
+    "watch": "rollup -c --watch",
+    "lint": "eslint ./src/*.js ./src/**/*.js",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "jest ./src --watch --coverage",
+    "test:ci": "jest ./src --coverage"
   },
   "repository": {
     "type": "git",
@@ -17,7 +22,8 @@
   },
   "homepage": "https://github.com/julianpoy/storypointingpoker#readme",
   "dependencies": {
-    "preact": "^10.5.12"
+    "preact": "^10.5.12",
+    "socket.io-client": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",
@@ -28,6 +34,9 @@
     "@rollup/plugin-babel": "^5.2.3",
     "@rollup/plugin-node-resolve": "^11.1.1",
     "babel-loader": "^8.2.2",
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "rollup": "^2.38.5",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
