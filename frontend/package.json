@@ -23,6 +23,7 @@
   "homepage": "https://github.com/julianpoy/storypointingpoker#readme",
   "dependencies": {
     "preact": "^10.5.12",
+    "prop-types": "^15.7.2",
     "socket.io-client": "^3.1.1"
   },
   "devDependencies": {
