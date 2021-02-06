@@ -62,7 +62,7 @@ io.on('connection', socket => {
       vote: null,
     });
 
-    io.to(roomCode).emit('room-update');
+    io.to(roomCode).emit('room-update', roomCode);
   });
 
   socket.on('vote', (roomCode, voteValue) => {
@@ -72,7 +72,7 @@ io.on('connection', socket => {
     const member = room.members.find(member => member.ioClientId === clientId);
     if (member) member.vote = voteValue;
 
-    io.to(roomCode).emit('room-update');
+    io.to(roomCode).emit('room-update', roomCode);
   });
 
   socket.on('show', (roomCode) => {
@@ -81,7 +81,7 @@ io.on('connection', socket => {
 
     room.state = 'show';
 
-    io.to(roomCode).emit('room-update');
+    io.to(roomCode).emit('room-update', roomCode);
   });
 
   socket.on('reset', (roomCode) => {
@@ -91,7 +91,7 @@ io.on('connection', socket => {
     room.state = 'start';
     room.members.forEach(member => member.vote = null);
 
-    io.to(roomCode).emit('room-update');
+    io.to(roomCode).emit('room-update', roomCode);
   });
 });
 
