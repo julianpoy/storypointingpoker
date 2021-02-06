@@ -1,0 +1,37 @@
+{
+  "name": "storypointingpoker",
+  "version": "1.0.0",
+  "description": "Simple Planning Poker project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julianpoy/storypointingpoker.git"
+  },
+  "author": "Orange Chicken",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/julianpoy/storypointingpoker/issues"
+  },
+  "homepage": "https://github.com/julianpoy/storypointingpoker#readme",
+  "dependencies": {
+    "preact": "^10.5.12",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "rollup": "^2.38.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.13",
+    "@babel/plugin-transform-react-jsx": "^7.12.13",
+    "@babel/preset-env": "^7.12.13",
+    "@babel/preset-react": "^7.12.13",
+    "@rollup/plugin-alias": "^3.1.2",
+    "babel-loader": "^8.2.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-serve": "^1.1.0"
+  }
+}
