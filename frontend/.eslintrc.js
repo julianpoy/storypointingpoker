@@ -6,6 +6,7 @@ module.exports = {
   },
   extends: [
     'airbnb-base',
+    "plugin:react/recommended"
   ],
   globals: {
     Atomics: 'readonly',
@@ -24,5 +25,6 @@ module.exports = {
     "no-param-reassign": 0,
     "import/prefer-default-export": 0,
     "import/no-self-import": 0,
+    "react/react-in-jsx-scope": 0,
   },
 };
