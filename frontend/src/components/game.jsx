@@ -1,13 +1,33 @@
 import PropTypes from 'prop-types';
+import { GameStatus } from './gameStatus.jsx';
 
-export const Game = ({ room, socket }) => (
-  <div>
-    Session Code: {room.code}
-    <br />
-    {socket.clientId}
-    Game
-  </div>
-);
+const ROOM_STATES = {
+  START: 'start',
+  SHOW: 'show',
+};
+
+export const Game = ({ room, socket }) => {
+  return (
+    <>
+      <GameStatus roomCode={room.code} />
+      <div>
+        {room.state === ROOM_STATES.START ? (
+          <button>Reveal Votes</button>
+        ): null}
+        {room.state === ROOM_STATES.SHOW ? (
+          <button>Reset Table</button>
+        ): null}
+      </div>
+
+      {room.members.map(member => (
+        <div>
+          <Card number={member.vote} />
+          {member.name}
+        </div>
+      ))}
+    </>
+  );
+};
 
 Game.propTypes = {
   room: PropTypes.any,
