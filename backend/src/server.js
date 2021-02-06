@@ -11,7 +11,7 @@ app.use(express.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use('/', (req, res) => res.render('frontend'));
+app.get('/', (req, res) => res.render('frontend'));
 
 const rooms = {};
 
@@ -49,7 +49,7 @@ app.post('/rooms', (req, res) => {
 
   rooms[room.code] = room;
 
-  res.status(200).send();
+  res.status(200).send(room);
 });
 
 app.post('/rooms/:id/join', (req, res) => {
@@ -63,10 +63,11 @@ app.post('/rooms/:id/join', (req, res) => {
 
   room.members.push({
     socketClientId,
-    name
+    name,
+    lastPing: Date.now(),
   });
   
-  res.sendStatus(200);
+  res.status(200).send(room);
 });
 
 const server = app.listen(parseInt(process.env.PORT || 3000, 10));
