@@ -17,10 +17,7 @@
   },
   "homepage": "https://github.com/julianpoy/storypointingpoker#readme",
   "dependencies": {
-    "preact": "^10.5.12",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "rollup": "^2.38.5"
+    "preact": "^10.5.12"
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",
@@ -28,10 +25,13 @@
     "@babel/preset-env": "^7.12.13",
     "@babel/preset-react": "^7.12.13",
     "@rollup/plugin-alias": "^3.1.2",
+    "@rollup/plugin-babel": "^5.2.3",
+    "@rollup/plugin-node-resolve": "^11.1.1",
     "babel-loader": "^8.2.2",
-    "rollup-plugin-babel": "^4.4.0",
+    "rollup": "^2.38.5",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-scss": "^2.6.1",
     "rollup-plugin-serve": "^1.1.0"
   }
 }

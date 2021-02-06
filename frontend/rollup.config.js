@@ -1,8 +1,9 @@
-// rollup.config.js// node-resolve will resolve all the node dependencies
 import resolve from 'rollup-plugin-node-resolve';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
-import alias from '@rollup/plugin-alias'
+import alias from '@rollup/plugin-alias';
+import babel from '@rollup/plugin-babel';
+import scss from 'rollup-plugin-scss';
 
 export default {
   input: 'src/index.js',
@@ -10,22 +11,21 @@ export default {
     file: 'dist/bundle.js',
     format: 'cjs'
   },
-  // All the used libs needs to be here
-  external: [
-    'react', 
-    'react-proptypes'
-  ],
   plugins: [
     resolve(),
-    ["@babel/plugin-transform-react-jsx", {
-        "pragma": "h",
-        "pragmaFrag": "Fragment",
-    }],
+    scss(),
     alias({
-        entries: [
-          { find: 'react', replacement: 'preact/compat' },
-          { find: 'react-dom', replacement: 'preact/compat' }
-        ]
+      entries: [
+        { find: 'react', replacement: 'preact/compat' },
+        { find: 'react-dom', replacement: 'preact/compat' }
+      ]
+    }),
+    babel({
+      plugins: [
+        ["@babel/plugin-transform-react-jsx", {
+          runtime: "automatic",
+        }]
+      ]
     }),
     process.argv.includes('--watch') &&
       serve({
@@ -36,3 +36,4 @@ export default {
     process.argv.includes('--watch') && livereload({ watch: 'dist' }),
   ]
 }
+

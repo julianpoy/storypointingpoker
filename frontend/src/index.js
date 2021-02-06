@@ -1,10 +1,13 @@
 import { render } from 'preact';
+import { Card } from './components/card';
 
-export const App = () => (
+const App = () => (
   <div>
     Welcome
+
+    <Card number={2} />
   </div>
 );
 
-render(App, document.body);
+render(<App />, document.body);
 
