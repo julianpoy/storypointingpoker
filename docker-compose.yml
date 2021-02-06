@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  server:
+    ports:
+      - 3008:3000
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: node ./src/server.js
+    volumes:
+      - ./src:/app/src
