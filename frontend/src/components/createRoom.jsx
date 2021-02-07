@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { useState } from 'preact/hooks';
 
+import { CARD_SETS, CARD_SETS_FORMAL_NAME } from '../utils/cardSets.js';
+
 export const CreateRoom = ({ setRoom }) => {
   const [roomName, setRoomName] = useState('');
   const onRoomNameChange = (event) => {
@@ -32,9 +34,9 @@ export const CreateRoom = ({ setRoom }) => {
         value={pointingScale}
         onChange={onPointingScaleChange}
       >
-        <option value="fibonacci">Fibonacci (0,1,2,3,5,8,13)</option>
-        <option value="integer">Simple Integer (1,2,3,4,5)</option>
-        <option value="tshirt">T-Shirt Sizes (XS,S,M,L,XL,XXL)</option>
+        {Object.entries(CARD_SETS).map(([name, values]) => (
+          <option value={name}>{CARD_SETS_FORMAL_NAME[name]} ({values.join(',')})</option>
+        ))}
       </select>
       <button onClick={createRoom}>Create Session</button>
     </div>
