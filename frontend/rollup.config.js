@@ -1,12 +1,11 @@
+/* eslint-disable */
 import resolve from '@rollup/plugin-node-resolve';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
-import alias from '@rollup/plugin-alias';
 import babel from '@rollup/plugin-babel';
-import scss from 'rollup-plugin-scss';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
-import typescript from '@rollup/plugin-typescript';
+import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
 
 export default {
@@ -18,17 +17,20 @@ export default {
   plugins: [
     resolve({
       browser: true,
-      //preferBuiltins: true,
     }),
     json(),
     commonjs(),
-    scss(),
+    postcss({
+      extract: false,
+      modules: true,
+      use: ['sass'],
+    }),
     babel({
       presets: [
-        ["@babel/preset-react",
+        ['@babel/preset-react',
         {
-          "runtime": "automatic",
-          "importSource": "preact-jsx-runtime"
+          'runtime': 'automatic',
+          'importSource': 'preact-jsx-runtime'
         }]
       ]
     }),
@@ -44,4 +46,3 @@ export default {
     process.argv.includes('--watch') && livereload({ watch: 'dist' }),
   ]
 }
-

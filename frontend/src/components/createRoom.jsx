@@ -3,6 +3,7 @@ import { useState } from 'preact/hooks';
 
 export const CreateRoom = ({ setRoom }) => {
   const [roomName, setRoomName] = useState('');
+  const [userName, setUserName] = useState('');
   const onRoomNameChange = (event) => {
     setRoomName(event.target.value);
   };
@@ -18,14 +19,20 @@ export const CreateRoom = ({ setRoom }) => {
       data: JSON.stringify({
         name: roomName,
         pointingScale,
+        userName: userName
       }),
     }).then((resp) => resp.json());
 
     setRoom(room);
   };
 
+  const onUserNameInput = (event) => {
+    setUserName(event.target.value);
+  };
+
   return (
     <div>
+      <input type="text" placeholder="UserName" onChange={onUserNameInput}></input>
       <input type="text" placeholder="Session Name" onChange={onRoomNameChange}></input>
       Pointing Scale:
       <select

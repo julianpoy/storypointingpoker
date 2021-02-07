@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { GameStatus } from './gameStatus.jsx';
+import { Card } from './card.jsx';
 
 const ROOM_STATES = {
   START: 'start',
@@ -8,7 +9,7 @@ const ROOM_STATES = {
 
 export const Game = ({ room, socket }) => {
   return (
-    <>
+    <div>
       <GameStatus roomCode={room.code} />
       <div>
         {room.state === ROOM_STATES.START ? (
@@ -25,7 +26,7 @@ export const Game = ({ room, socket }) => {
           {member.name}
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
