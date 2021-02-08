@@ -1,6 +1,5 @@
 import { io } from 'socket.io-client';
-import { useState, useEffect } from 'preact/hooks';
-
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import { Welcome } from './welcome.jsx';
 import { Game } from './game.jsx';
 
@@ -9,12 +8,19 @@ const socket = io();
 export const Main = () => {
   const [room, setRoom] = useState(null);
 
-  const roomCode = (room && room.code) || null;
   useEffect(() => {
-    if (roomCode) socket.emit('subscribe', roomCode);
-  }, roomCode);
+    socket.on('room-update', roomCode => {
+      if(!room || room.roomCode !== roomCode) return;
 
-  if (!room) return <Welcome setRoom={setRoom} />;
+      const roomUpdate = fetch(`/rooms/${roomCode}`, {
+        method: 'GET',
+      }).then((resp) => resp.json());
+
+      setRoom(roomUpdate);
+    });
+  }, []);
+
+  if (!room) return <Welcome setRoom={setRoom} socket={socket} />;
 
   return (
     <Game room={room} socket={socket} />
