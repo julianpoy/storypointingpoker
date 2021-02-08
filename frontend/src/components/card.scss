@@ -1,0 +1,23 @@
+.container {
+  border: 1px solid #3880ff;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 50px;
+  height: 100px;
+
+  color: black;
+  background-color: transparent;
+
+  &:focus {
+    border: 1px solid black;
+  }
+}
+
+.containerHighlighted {
+  background: #3880ff;
+
+  color: white;
+}

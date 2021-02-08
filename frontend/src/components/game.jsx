@@ -32,23 +32,31 @@ export const Game = ({ room, socket }) => {
       <GameStatus roomCode={room.code} />
       <div>
         {room.state === ROOM_STATES.START ? (
-          <button>Reveal Votes</button>
+          <button onClick={revealVotes}>Reveal Votes</button>
         ): null}
         {room.state === ROOM_STATES.SHOW ? (
-          <button>Reset Table</button>
+          <button onClick={resetTable}>Reset Table</button>
         ): null}
       </div>
 
       Votes:
       {room.members.map(member => (
         <div>
-          <Card number={member.vote} />
+          <Card
+            value={member.vote}
+            disabled={true}
+            hidden={room.state === ROOM_STATES.START}
+          />
           {member.name}
         </div>
       ))}
 
-      Cast Your Vote:
-      <VoteOptions socket={socket} room={room} />
+      {room.state === ROOM_STATES.START ? (
+        <>
+          Cast Your Vote:
+          <VoteOptions socket={socket} room={room} />
+        </>
+      ) : null}
     </>
   );
 };
