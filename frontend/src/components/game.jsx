@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { GameStatus } from './gameStatus.jsx';
 import { VoteOptions } from './voteOptions.jsx';
+import { Card } from './card.jsx';
 
 const ROOM_STATES = {
   START: 'start',
@@ -17,6 +18,8 @@ export const Game = ({ room, socket }) => {
   };
 
   const me = room.members.find(member => member.ioClientId === socket.id);
+
+  console.log(room, socket)
 
   if (!room || !me) return (
     <>

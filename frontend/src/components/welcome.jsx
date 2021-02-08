@@ -24,7 +24,7 @@ export const Welcome = ({ setRoom, socket }) => {
     setUserName(event.target.value);
   };
 
-  if (showCreating) return <CreateRoom setRoom={setRoom} />;
+  if (showCreating) return <CreateRoom setRoom={setRoom} socket={socket} />;
 
   return (
     <div>

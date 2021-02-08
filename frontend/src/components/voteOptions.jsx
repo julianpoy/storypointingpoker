@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+import { Card } from './card.jsx';
 import { CARD_SETS, CARD_SETS_FORMAL_NAME } from '../utils/cardSets.js';
 
 export const VoteOptions = ({ socket, room }) => {
