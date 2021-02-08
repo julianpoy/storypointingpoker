@@ -19,11 +19,11 @@ export const CreateRoom = ({ setRoom }) => {
       data: JSON.stringify({
         name: roomName,
         pointingScale,
-        userName: userName
       }),
     }).then((resp) => resp.json());
 
     setRoom(room);
+    socket.emit('join', room.code, userName);
   };
 
   const onUserNameInput = (event) => {

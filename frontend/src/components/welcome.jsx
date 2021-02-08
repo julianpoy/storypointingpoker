@@ -11,8 +11,9 @@ export const Welcome = ({ setRoom, socket }) => {
     const room = await fetch(`/rooms/${roomCode}`, {
       method: 'GET',
     }).then((resp) => resp.json());
-    socket.emit('join', roomCode, userName);
+
     setRoom(room);
+    socket.emit('join', roomCode, userName);
   };
 
   const onRoomCodeInput = (event) => {
