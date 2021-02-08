@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'preact/hooks';
 
-import { CARD_SETS, CARD_SETS_FORMAL_NAME } from '../utils/cardSets.js';
-
 export const CreateRoom = ({ setRoom }) => {
   const [roomName, setRoomName] = useState('');
+  const [userName, setUserName] = useState('');
   const onRoomNameChange = (event) => {
     setRoomName(event.target.value);
   };
@@ -20,23 +19,29 @@ export const CreateRoom = ({ setRoom }) => {
       data: JSON.stringify({
         name: roomName,
         pointingScale,
+        userName: userName
       }),
     }).then((resp) => resp.json());
 
     setRoom(room);
   };
 
+  const onUserNameInput = (event) => {
+    setUserName(event.target.value);
+  };
+
   return (
     <div>
+      <input type="text" placeholder="UserName" onChange={onUserNameInput}></input>
       <input type="text" placeholder="Session Name" onChange={onRoomNameChange}></input>
       Pointing Scale:
       <select
         value={pointingScale}
         onChange={onPointingScaleChange}
       >
-        {Object.entries(CARD_SETS).map(([name, values]) => (
-          <option value={name}>{CARD_SETS_FORMAL_NAME[name]} ({values.join(',')})</option>
-        ))}
+        <option value="fibonacci">Fibonacci (0,1,2,3,5,8,13)</option>
+        <option value="integer">Simple Integer (1,2,3,4,5)</option>
+        <option value="tshirt">T-Shirt Sizes (XS,S,M,L,XL,XXL)</option>
       </select>
       <button onClick={createRoom}>Create Session</button>
     </div>
