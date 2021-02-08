@@ -3,30 +3,21 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import { Welcome } from './welcome.jsx';
 import { Game } from './game.jsx';
 
+const socket = io();
+
 export const Main = () => {
   const [room, setRoom] = useState(null);
-  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    setSocket(io());
-  }, [])
-
-  const roomUpdate = useCallback((roomCode) => {
-    console.log(roomCode)
+    socket.on('room-update', roomCode => {
     if(!room || room.roomCode !== roomCode) return
-    console.log(`Room updated, fetching room: ${roomCode}`)
-    const room = fetch(`/rooms/${roomCode}`, {
+    const newRoom = fetch(`/rooms/${roomCode}`, {
       method: 'GET',
     }).then((resp) => resp.json());
 
-    console.log(`setting room ${room}`)
-    setRoom(room);
+    setRoom(newRoom);
+    })
   }, [])
-
-  useEffect(() => {
-    if (!socket) return
-    socket.on('room-update', roomUpdate)
-  }, [socket])
 
   if(!socket) return <h2>Connecting...</h2>
 
