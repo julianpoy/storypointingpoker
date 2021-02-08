@@ -11,12 +11,12 @@ let launchRoomCode = '';
 try {
   const urlParams = new URLSearchParams(window.location.search);
   launchRoomCode = urlParams.get('sessionCode') || '';
-} catch(e) {}
+} catch (e) {}
 
 let savedName = '';
 try {
   savedName = localStorage.getItem('nickname') || '';
-} catch(e) {}
+} catch (e) {}
 
 export const Welcome = ({ setRoom, socket }) => {
   const [roomCode, setRoomCode] = useState(launchRoomCode);
@@ -33,7 +33,7 @@ export const Welcome = ({ setRoom, socket }) => {
 
     try {
       localStorage.setItem('nickname', userName);
-    } catch(e){}
+    } catch (e) {}
   };
 
   useEffect(() => {
@@ -95,5 +95,5 @@ export const Welcome = ({ setRoom, socket }) => {
 
 Welcome.propTypes = {
   setRoom: PropTypes.function,
-  socket: PropTypes.any
+  socket: PropTypes.any,
 };

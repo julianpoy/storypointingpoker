@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c --watch",
-    "lint": "eslint ./src/*.js ./src/**/*.js",
+    "lint": "eslint ./src/*.jsx ./src/**/*.jsx",
     "lint:fix": "npm run lint -- --fix",
     "test": "jest ./src --watch --coverage",
     "test:ci": "jest ./src --coverage"
@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/julianpoy/storypointingpoker.git"
   },
-  "author": "Orange Chicken",
+  "author": "Julian Poyourow & Chris Meyer",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/julianpoy/storypointingpoker/issues"

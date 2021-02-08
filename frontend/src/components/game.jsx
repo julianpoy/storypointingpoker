@@ -20,7 +20,7 @@ export const Game = ({ room, socket }) => {
       const urlParams = new URLSearchParams(window.location.search);
       const launchRoomCode = urlParams.get('sessionCode');
       if (!launchRoomCode) window.history.pushState(null, '', `${window.location.origin}/?sessionCode=${room.code}`);
-    } catch(e){}
+    } catch (e) {}
   }, [room.code]);
 
   const revealVotes = () => {
@@ -31,13 +31,15 @@ export const Game = ({ room, socket }) => {
     socket.emit('reset', room.code);
   };
 
-  const me = room.members.find(member => member.ioClientId === socket.io.engine.id);
+  const me = room.members.find((member) => member.ioClientId === socket.io.engine.id);
 
-  if (!room || !me) return (
+  if (!room || !me) {
+    return (
     <>
       Not connected to the room.
     </>
-  );
+    );
+  }
 
   return (
     <>
@@ -45,10 +47,10 @@ export const Game = ({ room, socket }) => {
       <div className={styles.table}>
         {room.state === ROOM_STATES.START ? (
           <button className={buttonStyles.button} onClick={revealVotes}>Reveal Votes</button>
-        ): null}
+        ) : null}
         {room.state === ROOM_STATES.SHOW ? (
           <button className={buttonStyles.button} onClick={resetTable}>Reset Table</button>
-        ): null}
+        ) : null}
       </div>
 
       <br />

@@ -8,7 +8,7 @@ import styles from './createRoom.scss';
 let savedName = '';
 try {
   savedName = localStorage.getItem('nickname') || '';
-} catch(e) {}
+} catch (e) {}
 
 export const CreateRoom = ({ setRoom, socket, cancelCreating }) => {
   const [roomName, setRoomName] = useState('');
@@ -31,7 +31,7 @@ export const CreateRoom = ({ setRoom, socket, cancelCreating }) => {
     const room = await fetch('/rooms', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         name: roomName,
@@ -45,7 +45,7 @@ export const CreateRoom = ({ setRoom, socket, cancelCreating }) => {
 
     try {
       localStorage.setItem('nickname', userName);
-    } catch(e){}
+    } catch (e) {}
   };
 
   return (

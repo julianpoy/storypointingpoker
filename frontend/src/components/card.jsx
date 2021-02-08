@@ -3,14 +3,16 @@ import cx from 'classnames';
 
 import styles from './card.scss';
 
-export const Card = ({ disabled, hidden, value, highlighted, onClick }) => {
+export const Card = ({
+  disabled, hidden, value, highlighted, onClick,
+}) => {
   const className = cx(
     styles.container,
     {
       [styles.clickable]: !disabled,
       [styles.inactive]: !value,
       [styles.containerHighlighted]: highlighted,
-    }
+    },
   );
 
   let content = value;
@@ -36,7 +38,7 @@ Card.propTypes = {
   disabled: PropTypes.boolean,
   value: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.number
+    PropTypes.number,
   ]),
   highlighted: PropTypes.boolean,
   onClick: PropTypes.function,

@@ -4,10 +4,9 @@ import { Card } from './card.jsx';
 
 import styles from './voteList.scss';
 
-export const VoteList = ({ members, hidden }) => {
-  return (
+export const VoteList = ({ members, hidden }) => (
     <div className={styles.container}>
-      {members.map(member => (
+      {members.map((member) => (
         <div className={styles.vote}>
           <Card
             value={member.vote}
@@ -18,8 +17,7 @@ export const VoteList = ({ members, hidden }) => {
         </div>
       ))}
     </div>
-  );
-};
+);
 
 VoteList.propTypes = {
   members: PropTypes.any,

@@ -10,13 +10,13 @@ export const VoteOptions = ({ socket, room }) => {
     socket.emit('vote', room.code, value);
   };
 
-  const me = room.members.find(member => member.ioClientId === socket.io.engine.id);
+  const me = room.members.find((member) => member.ioClientId === socket.io.engine.id);
 
   if (!room || !me) return;
 
   return (
     <div className={styles.container}>
-      {CARD_SETS[room.pointingScale].map(value => (
+      {CARD_SETS[room.pointingScale].map((value) => (
         <Card
           highlighted={me.vote === value}
           value={value}
