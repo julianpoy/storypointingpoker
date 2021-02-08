@@ -42,7 +42,7 @@ const isValidRoomCode = roomCode => {
 
 const io = require('socket.io')(server);
 io.on('connection', socket => {
-  const clientId = socket.client.id;
+  const clientId = socket.id;
   console.log("Client connected!", clientId);
 
   socket.on('join', (roomCode, name) => {
@@ -50,7 +50,9 @@ io.on('connection', socket => {
 
     const room = rooms[roomCode];
 
-    if (room) socket.join(roomCode);
+    if (!room) return;
+
+    socket.join(roomCode);
 
     const existingMember = room.members.find(member => member.ioClientId === clientId);
 
@@ -61,6 +63,8 @@ io.on('connection', socket => {
       name,
       vote: null,
     });
+
+    console.log("broadcasting room update", room);
 
     io.to(roomCode).emit('room-update', roomCode);
   });
@@ -113,7 +117,7 @@ app.post('/rooms', (req, res) => {
     code: generateRoomCode(),
     members: [],
     state: 'start',
-    pointingScale: req.pointingScale,
+    pointingScale: req.body.pointingScale,
   };
 
   rooms[room.code] = room;
