@@ -7,6 +7,7 @@ export const Card = ({ disabled, hidden, value, highlighted, onClick }) => {
   const className = cx(
     styles.container,
     {
+      [styles.clickable]: !disabled,
       [styles.inactive]: !value,
       [styles.containerHighlighted]: highlighted,
     }

@@ -5,9 +5,14 @@ import buttonStyles from '../sharedCss/button.scss';
 import inputStyles from '../sharedCss/input.scss';
 import styles from './createRoom.scss';
 
+let savedName = '';
+try {
+  savedName = localStorage.getItem('nickname') || '';
+} catch(e) {}
+
 export const CreateRoom = ({ setRoom, socket, cancelCreating }) => {
   const [roomName, setRoomName] = useState('');
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState(savedName);
   const [pointingScale, setPointingScale] = useState('fibonacci');
 
   const onRoomNameChange = (event) => {
@@ -37,6 +42,10 @@ export const CreateRoom = ({ setRoom, socket, cancelCreating }) => {
     setRoom(room);
 
     socket.emit('join', room.code, userName);
+
+    try {
+      localStorage.setItem('nickname', userName);
+    } catch(e){}
   };
 
   return (
@@ -45,6 +54,7 @@ export const CreateRoom = ({ setRoom, socket, cancelCreating }) => {
         Create a Session
       </h3>
       <input
+        value={userName}
         className={inputStyles.input}
         type="text"
         placeholder="Your Nickname"

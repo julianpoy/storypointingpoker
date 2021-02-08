@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 
 import { CreateRoom } from './createRoom.jsx';
 
@@ -7,9 +7,20 @@ import buttonStyles from '../sharedCss/button.scss';
 import inputStyles from '../sharedCss/input.scss';
 import styles from './welcome.scss';
 
+let launchRoomCode = '';
+try {
+  const urlParams = new URLSearchParams(window.location.search);
+  launchRoomCode = urlParams.get('sessionCode') || '';
+} catch(e) {}
+
+let savedName = '';
+try {
+  savedName = localStorage.getItem('nickname') || '';
+} catch(e) {}
+
 export const Welcome = ({ setRoom, socket }) => {
-  const [roomCode, setRoomCode] = useState('');
-  const [userName, setUserName] = useState('');
+  const [roomCode, setRoomCode] = useState(launchRoomCode);
+  const [userName, setUserName] = useState(savedName);
   const [showCreating, setShowCreating] = useState(false);
 
   const joinRoom = async () => {
@@ -19,7 +30,17 @@ export const Welcome = ({ setRoom, socket }) => {
 
     setRoom(room);
     socket.emit('join', roomCode, userName);
+
+    try {
+      localStorage.setItem('nickname', userName);
+    } catch(e){}
   };
+
+  useEffect(() => {
+    if (roomCode && userName) {
+      joinRoom();
+    }
+  }, []);
 
   const onRoomCodeInput = (event) => {
     setRoomCode(event.target.value);
@@ -45,6 +66,7 @@ export const Welcome = ({ setRoom, socket }) => {
             or, join an existing session
           </div>
           <input
+            value={userName}
             className={inputStyles.input}
             type="text"
             placeholder="Your Nickname"
@@ -52,6 +74,7 @@ export const Welcome = ({ setRoom, socket }) => {
           ></input>
           <br />
           <input
+            value={roomCode}
             className={inputStyles.input}
             type="text"
             placeholder="Session Code"

@@ -6,7 +6,36 @@ import { Game } from './game.jsx';
 
 import styles from './main.scss';
 
-const socket = io();
+let connectionOpts;
+let clientId;
+try {
+  clientId = localStorage.getItem('clientId');
+
+  if (clientId) connectionOpts = {
+    query: {
+      clientId
+    }
+  };
+} catch(e){}
+
+const socket = io(window.location.origin, connectionOpts);
+
+socket.on('reconnect_attempt', () => {
+  socket.io.opts.query = {
+    clientId,
+  }
+});
+
+socket.on('connect', () => {
+  clientId = socket.io.engine.id;
+  console.log("Connected", clientId);
+
+  localStorage.setItem('clientId', clientId);
+});
+
+window.onpopstate = function (e) {
+  window.location.reload();
+};
 
 export const Main = () => {
   const [room, setRoom] = useState(null);

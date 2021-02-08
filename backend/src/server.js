@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const os = require('os');
 const path = require('path');
 const pug = require('pug');
+const crypto = require('crypto');
+const url = require('url');
 
 const app = express();
 app.use(morgan(':method :url :status :response-time ms'));
@@ -14,23 +16,35 @@ app.set('view engine', 'pug');
 const server = app.listen(parseInt(process.env.PORT || 3000, 10));
 
 const rooms = {};
+const roomCodesByClientId = {};
 
-const ROOM_CODE_LENGTH = 6;
-const generateRoomCode = () => {
+const generateRandomString = length => {
   const alphabet = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
   const alphabetLength = alphabet.length;
 
-  let roomCode = '';
-  for (let i = 0; i < ROOM_CODE_LENGTH; i++) {
-    roomCode += alphabet.charAt(Math.floor(Math.random() * alphabetLength));
+  let randomString = '';
+  for (let i = 0; i < length; i++) {
+    randomString += alphabet.charAt(Math.floor(Math.random() * alphabetLength));
   }
+
+  return randomString;
+}
+
+const ROOM_CODE_LENGTH = 6;
+const generateRoomCode = () => {
+  const roomCode = generateRandomString(ROOM_CODE_LENGTH);
 
   if (!rooms[roomCode]) {
     return roomCode;
   }
 
   return generateRoomCode();
-}
+};
+
+const CLIENT_ID_SIZE = 50;
+const generateClientId = () => {
+  return crypto.randomBytes(CLIENT_ID_SIZE).toString('hex');
+};
 
 const isValidRoomCode = roomCode => {
   const containsIllegalChar = (/[^A-Z0-9]/).test(roomCode);
@@ -41,9 +55,25 @@ const isValidRoomCode = roomCode => {
 // TODO: Move Socket.Io to a separate file
 
 const io = require('socket.io')(server);
+
+io.engine.generateId = req => {
+  const parsedUrl = new URL(req.url, 'https://example.com/'); // URL constructor requires baseUrl as second param
+  const prevId = parsedUrl.searchParams.get('clientId')
+
+  if (prevId && prevId !== 'null') {
+    console.log("Client reconnecting", prevId);
+    return prevId
+  }
+  return generateClientId();
+}
+
 io.on('connection', socket => {
-  const clientId = socket.id;
+  const clientId = socket.client.id;
   console.log("Client connected!", clientId);
+
+  // Have user rejoin any rooms they were previously in
+  if (roomCodesByClientId[clientId]) roomCodesByClientId[clientId].forEach(roomId => socket.join(roomId));
+  else roomCodesByClientId[clientId] = [];
 
   socket.on('join', (roomCode, name) => {
     console.log("Request to join room: ", roomCode);
@@ -54,6 +84,8 @@ io.on('connection', socket => {
 
     socket.join(roomCode);
 
+    if (!roomCodesByClientId[clientId].includes(roomCode)) roomCodesByClientId[clientId].push(roomCode);
+
     const existingMember = room.members.find(member => member.ioClientId === clientId);
 
     if (existingMember) return;
@@ -63,8 +95,6 @@ io.on('connection', socket => {
       name,
       vote: null,
     });
-
-    console.log("broadcasting room update", room);
 
     io.to(roomCode).emit('room-update', roomCode);
   });
@@ -96,6 +126,19 @@ io.on('connection', socket => {
     room.members.forEach(member => member.vote = null);
 
     io.to(roomCode).emit('room-update', roomCode);
+  });
+
+  socket.on('disconnect', () => {
+    console.log("User disconnected", clientId);
+    roomCodesByClientId[clientId].map(roomCode => {
+      const room = rooms[roomCode];
+      const member = room.members.find(member => member.ioClientId === clientId);
+      if (!member) return;
+
+      room.members.splice(room.members.indexOf(member), 1);
+
+      io.to(room.code).emit('room-update', room.code);
+    });
   });
 });
 

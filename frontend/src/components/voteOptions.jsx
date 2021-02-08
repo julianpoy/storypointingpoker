@@ -10,7 +10,7 @@ export const VoteOptions = ({ socket, room }) => {
     socket.emit('vote', room.code, value);
   };
 
-  const me = room.members.find(member => member.ioClientId === socket.id);
+  const me = room.members.find(member => member.ioClientId === socket.io.engine.id);
 
   if (!room || !me) return;
 

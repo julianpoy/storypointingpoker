@@ -1,3 +1,4 @@
+import { useEffect } from 'preact/hooks';
 import PropTypes from 'prop-types';
 
 import { GameStatus } from './gameStatus.jsx';
@@ -14,6 +15,14 @@ const ROOM_STATES = {
 };
 
 export const Game = ({ room, socket }) => {
+  useEffect(() => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const launchRoomCode = urlParams.get('sessionCode');
+      if (!launchRoomCode) window.history.pushState(null, '', `${window.location.origin}/?sessionCode=${room.code}`);
+    } catch(e){}
+  }, [room.code]);
+
   const revealVotes = () => {
     socket.emit('show', room.code);
   };
@@ -22,9 +31,7 @@ export const Game = ({ room, socket }) => {
     socket.emit('reset', room.code);
   };
 
-  const me = room.members.find(member => member.ioClientId === socket.id);
-
-  console.log(room, socket)
+  const me = room.members.find(member => member.ioClientId === socket.io.engine.id);
 
   if (!room || !me) return (
     <>
