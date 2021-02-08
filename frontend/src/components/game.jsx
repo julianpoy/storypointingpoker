@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
+
 import { GameStatus } from './gameStatus.jsx';
 import { VoteOptions } from './voteOptions.jsx';
+import { VoteList } from './voteList.jsx';
 import { Card } from './card.jsx';
+
+import buttonStyles from '../sharedCss/button.scss';
+import styles from './game.scss';
 
 const ROOM_STATES = {
   START: 'start',
@@ -29,33 +34,25 @@ export const Game = ({ room, socket }) => {
 
   return (
     <>
-      <GameStatus roomCode={room.code} />
-      <div>
+      <GameStatus roomCode={room.code} name={me.name} />
+      <div className={styles.table}>
         {room.state === ROOM_STATES.START ? (
-          <button onClick={revealVotes}>Reveal Votes</button>
+          <button className={buttonStyles.button} onClick={revealVotes}>Reveal Votes</button>
         ): null}
         {room.state === ROOM_STATES.SHOW ? (
-          <button onClick={resetTable}>Reset Table</button>
+          <button className={buttonStyles.button} onClick={resetTable}>Reset Table</button>
         ): null}
       </div>
 
-      Votes:
-      {room.members.map(member => (
-        <div>
-          <Card
-            value={member.vote}
-            disabled={true}
-            hidden={room.state === ROOM_STATES.START}
-          />
-          {member.name}
-        </div>
-      ))}
+      <br />
+
+      <p>
+        Votes:
+      </p>
+      <VoteList members={room.members} hidden={room.state !== ROOM_STATES.SHOW} />
 
       {room.state === ROOM_STATES.START ? (
-        <>
-          Cast Your Vote:
-          <VoteOptions socket={socket} room={room} />
-        </>
+        <VoteOptions socket={socket} room={room} />
       ) : null}
     </>
   );

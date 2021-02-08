@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types';
 import { useState } from 'preact/hooks';
 
-export const CreateRoom = ({ setRoom, socket }) => {
+import buttonStyles from '../sharedCss/button.scss';
+import inputStyles from '../sharedCss/input.scss';
+import styles from './createRoom.scss';
+
+export const CreateRoom = ({ setRoom, socket, cancelCreating }) => {
   const [roomName, setRoomName] = useState('');
   const [userName, setUserName] = useState('');
   const [pointingScale, setPointingScale] = useState('fibonacci');
@@ -37,10 +41,28 @@ export const CreateRoom = ({ setRoom, socket }) => {
 
   return (
     <div>
-      <input type="text" placeholder="UserName" onChange={onUserNameInput}></input>
-      <input type="text" placeholder="Session Name" onChange={onRoomNameChange}></input>
-      Pointing Scale:
+      <h3>
+        Create a Session
+      </h3>
+      <input
+        className={inputStyles.input}
+        type="text"
+        placeholder="Your Nickname"
+        onChange={onUserNameInput}
+      ></input>
+      <br />
+      <input
+        className={inputStyles.input}
+        type="text"
+        placeholder="Session Name"
+        onChange={onRoomNameChange}
+      ></input>
+      <br />
+      <p>
+        Pointing Scale:
+      </p>
       <select
+        className={inputStyles.input}
         value={pointingScale}
         onChange={onPointingScaleChange}
       >
@@ -48,7 +70,21 @@ export const CreateRoom = ({ setRoom, socket }) => {
         <option value="integer">Simple Integer (1,2,3,4,5)</option>
         <option value="tshirt">T-Shirt Sizes (XS,S,M,L,XL,XXL)</option>
       </select>
-      <button onClick={createRoom}>Create Session</button>
+      <br />
+      <br />
+      <button
+        className={buttonStyles.button}
+        onClick={createRoom}
+      >
+        Create Session
+      </button>
+      <br />
+      <button
+        className={buttonStyles.clearButton}
+        onClick={cancelCreating}
+      >
+        Join a Session Instead
+      </button>
     </div>
   );
 };
@@ -56,4 +92,5 @@ export const CreateRoom = ({ setRoom, socket }) => {
 CreateRoom.propTypes = {
   setRoom: PropTypes.function,
   socket: PropTypes.any,
+  cancelCreating: PropTypes.function,
 };

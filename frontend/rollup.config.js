@@ -24,6 +24,7 @@ export default {
       extract: false,
       modules: true,
       use: ['sass'],
+      globalModulePaths: [/global.scss/],
     }),
     babel({
       presets: [

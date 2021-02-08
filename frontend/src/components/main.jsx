@@ -1,7 +1,10 @@
 import { io } from 'socket.io-client';
 import { useEffect, useState, useRef } from 'preact/hooks';
+
 import { Welcome } from './welcome.jsx';
 import { Game } from './game.jsx';
+
+import styles from './main.scss';
 
 const socket = io();
 
@@ -23,9 +26,18 @@ export const Main = () => {
     });
   }, []);
 
-  if (!room) return <Welcome setRoom={setRoom} socket={socket} />;
-
   return (
-    <Game room={room} socket={socket} />
+    <div className={styles.container}>
+      <h1 className={styles.header}>Story Pointing Poker!</h1>
+      <p className={styles.tagLine}>
+        A free and <a href="https://github.com/julianpoy/storypointingpoker">open source</a> version of pointing poker.
+      </p>
+      
+      {room ? (
+        <Game setRoom={setRoom} room={room} socket={socket} />
+      ) : (
+        <Welcome setRoom={setRoom} socket={socket} />
+      )}
+    </div>
   );
 };

@@ -1,6 +1,11 @@
 import PropTypes from 'prop-types';
 import { useState } from 'preact/hooks';
+
 import { CreateRoom } from './createRoom.jsx';
+
+import buttonStyles from '../sharedCss/button.scss';
+import inputStyles from '../sharedCss/input.scss';
+import styles from './welcome.scss';
 
 export const Welcome = ({ setRoom, socket }) => {
   const [roomCode, setRoomCode] = useState('');
@@ -24,15 +29,43 @@ export const Welcome = ({ setRoom, socket }) => {
     setUserName(event.target.value);
   };
 
-  if (showCreating) return <CreateRoom setRoom={setRoom} socket={socket} />;
-
   return (
     <div>
-      <button onClick={() => setShowCreating(true)}>Create a New Session</button>
-      or
-      <input type="text" placeholder="UserName" onChange={onUserNameInput}></input>
-      <input type="text" placeholder="Session Code" onChange={onRoomCodeInput}></input>
-      <button onClick={joinRoom}>Join a Session</button>
+      {showCreating ? (
+        <CreateRoom setRoom={setRoom} socket={socket} cancelCreating={() => setShowCreating(false)} />
+      ) : (
+        <>
+          <button
+            className={buttonStyles.button}
+            onClick={() => setShowCreating(true)}
+          >
+            Create a New Session
+          </button>
+          <div className={styles.joinExistingMessage}>
+            or, join an existing session
+          </div>
+          <input
+            className={inputStyles.input}
+            type="text"
+            placeholder="Your Nickname"
+            onChange={onUserNameInput}
+          ></input>
+          <br />
+          <input
+            className={inputStyles.input}
+            type="text"
+            placeholder="Session Code"
+            onChange={onRoomCodeInput}
+          ></input>
+          <br />
+          <button
+            className={buttonStyles.button}
+            onClick={joinRoom}
+          >
+            Join Session
+          </button>
+        </>
+      )}
     </div>
   );
 };

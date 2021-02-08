@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
 
-export const GameStatus = ({ roomCode }) => (
-  <div>
-    Session Code: {roomCode}
+import styles from './gameStatus.scss';
+
+export const GameStatus = ({ roomCode, name }) => (
+  <div className={styles.container}>
+    Session Code: <b>{roomCode}</b><br />
+    Your Nickname: {name}
   </div>
 );
 

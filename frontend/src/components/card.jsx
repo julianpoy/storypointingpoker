@@ -7,9 +7,17 @@ export const Card = ({ disabled, hidden, value, highlighted, onClick }) => {
   const className = cx(
     styles.container,
     {
+      [styles.inactive]: !value,
       [styles.containerHighlighted]: highlighted,
     }
   );
+
+  let content = value;
+  if (hidden && value) {
+    content = (
+      <span className={styles.checkmark}>&#10003;</span>
+    );
+  } else if (hidden) content = '';
 
   return (
     <button
@@ -18,7 +26,7 @@ export const Card = ({ disabled, hidden, value, highlighted, onClick }) => {
       className={className}
       ariaLabel={`Vote for ${value}`}
     >
-      {hidden ? null : value}
+      {content}
     </button>
   );
 };

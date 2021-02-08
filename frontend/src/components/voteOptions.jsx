@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Card } from './card.jsx';
 import { CARD_SETS, CARD_SETS_FORMAL_NAME } from '../utils/cardSets.js';
 
+import styles from './voteOptions.scss';
+
 export const VoteOptions = ({ socket, room }) => {
   const castVote = (value) => {
     socket.emit('vote', room.code, value);
@@ -13,7 +15,7 @@ export const VoteOptions = ({ socket, room }) => {
   if (!room || !me) return;
 
   return (
-    <div>
+    <div className={styles.container}>
       {CARD_SETS[room.pointingScale].map(value => (
         <Card
           highlighted={me.vote === value}
@@ -21,6 +23,9 @@ export const VoteOptions = ({ socket, room }) => {
           onClick={() => castVote(value)}
         />
       ))}
+      <div className={styles.instructions}>
+        Click a card to cast your vote
+      </div>
     </div>
   );
 };

@@ -1,12 +1,6 @@
 import { render } from 'preact';
 import { Main } from './components/main.jsx';
 
-const App = () => (
-  <div>
-    Welcome
+import './sharedCss/global.scss'; // Globally applied CSS
 
-    <Main />
-  </div>
-);
-
-render(<App />, document.body);
+render(<Main />, document.body);
