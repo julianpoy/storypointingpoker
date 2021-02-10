@@ -144,7 +144,9 @@ io.on('connection', socket => {
 
 // TODO: Move these routes to a separate file
 
-app.get('/', (req, res) => res.render('frontend'));
+app.get('/', (req, res) => res.render('frontend', {
+  FRONTEND_ASSET_PATH: process.env.FRONTEND_ASSET_PATH
+}));
 
 
 app.get('/rooms/:id', (req, res) => {
