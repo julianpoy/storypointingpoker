@@ -1,31 +1,42 @@
-// rollup.config.js// node-resolve will resolve all the node dependencies
-import resolve from 'rollup-plugin-node-resolve';
+/* eslint-disable */
+import resolve from '@rollup/plugin-node-resolve';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
-import alias from '@rollup/plugin-alias'
+import babel from '@rollup/plugin-babel';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import postcss from 'rollup-plugin-postcss';
+import replace from '@rollup/plugin-replace';
 
 export default {
-  input: 'src/index.js',
+  input: 'src/index.jsx',
   output: {
     file: 'dist/bundle.js',
     format: 'cjs'
   },
-  // All the used libs needs to be here
-  external: [
-    'react', 
-    'react-proptypes'
-  ],
   plugins: [
-    resolve(),
-    ["@babel/plugin-transform-react-jsx", {
-        "pragma": "h",
-        "pragmaFrag": "Fragment",
-    }],
-    alias({
-        entries: [
-          { find: 'react', replacement: 'preact/compat' },
-          { find: 'react-dom', replacement: 'preact/compat' }
-        ]
+    resolve({
+      browser: true,
+    }),
+    json(),
+    commonjs(),
+    postcss({
+      extract: false,
+      modules: true,
+      use: ['sass'],
+      globalModulePaths: [/global.scss/],
+    }),
+    babel({
+      presets: [
+        ['@babel/preset-react',
+        {
+          'runtime': 'automatic',
+          'importSource': 'preact-jsx-runtime'
+        }]
+      ]
+    }),
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
     process.argv.includes('--watch') &&
       serve({
